@@ -6,7 +6,7 @@ The main objective is to have a global credential repository that works in a gen
 That is why within the contracts there is the **CredentialRegistry** whose function is to maintain the main registry. However, it is not intended to interact directly with applications. 
 That is why there is a contract that serves as a Facade to be able to register each type of credential, this contract is called **ClaimsVerifier**, and it is in charge of both registering the credential hashes and verifying them by making internal calls to the **CredentialRegistry**.
 
-- **CredentialRegistry**: Master credential record
+- **CredentialRegistry**: Master credential registry
 - **AbstractClaimsVerifier**: Abstract class that represents a credential verifier
 - **ClaimsVerifier**: Class that allows verifying a specific type of credential (inherits from **AbstractClaimVerifier**). Receive the **CredentialRegistry** address as a constructor argument
 - **ClaimTypes**: Generic class that defines EIP712 domain types for credentials
@@ -26,7 +26,7 @@ The **SIGNER_ROLE** should be assigned to any account that is going to sign a cr
 
 There is an additional use of the **ISSUER_ROLE**, and that in order to interact with the **CredentialRegistry**, the **ClaimsVerifier** contract address must be registered as an issuer in the **CredentialRegistry**. The latter makes more sense when considering that there will be different types of credentials and therefore Claims Verifiers.
 
-### Pre-requisites
+## Pre-requisites
 
 - NodeJS  > 12.4
 - OpenZeppelin CLI > 2.8.2
