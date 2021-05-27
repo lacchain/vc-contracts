@@ -1,0 +1,21 @@
+{
+  "name": "vc-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethereumjs-util": "^7.0.10",
+    "ganache-cli": "^6.5.0",
+    "moment": "^2.29.1",
+    "truffle": "^5.1.67",
+    "web3-eth-abi": "^1.3.6",
+    "web3-utils": "^1.3.6",
+    "@openzeppelin/contracts": "3.0.0"
+  }
+}
