@@ -60,7 +60,7 @@ Where:
  - chainId: The network id (In L-net is 648529)
  - verifyingContract: The address of **ClaimsVerifier** contract
 
-As mentioned in the Structure section, the contract to register a credential is **ClaimsVerifier**, and the function for this is as follows:
+As mentioned in the Structure section, the contract to register a credential is **ClaimsVerifier**, and the function to do this is:
 
 ```solidity
 function registerCredential(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature)
@@ -87,7 +87,7 @@ Where:
 - **_credentialHash**: It is the previously generated hash
 - **_signature**: It is the additional signer signature in hex (same procedure as issuer signature)
 
-### 3. Verify the credential
+### 2. Verify the credential
 Unlike the registration methods, the function to verify a credential can only be called without the need to send a transaction to the network, therefore it has zero gas cost. 
 The function to verify a credential is inside **ClaimsVerifier** and is the following:
 
@@ -119,7 +119,7 @@ Where:
 
 The result is only a boolean if the signature is correct.
 
-### 4. Revocation
+### 3. Revocation
 As shown in the structure diagram, the process of revocation of a credential must be called directly in the **CredentialRegistry** contract, this is because this function validates that only the issuer can execute this operation (since if the facade is used, the ``msg.sender`` would be the address of the **ClaimVerifier**).
 
 ```solidity
@@ -129,7 +129,7 @@ function revokeCredential(bytes32 _credentialHash)
 Where:
 - **_credentialHash**: It is the generated credential hash
 
-This function will revoke the credential hash associated to the ``msg.sender`` and the credential hash.
+This function will revoke the credential associated to the ``msg.sender`` and the ``_credentialHash``.
 
 #### Verify the credential status (Revocation List)
 
@@ -152,13 +152,13 @@ This information could be used to define the ``credentialStatus`` of a Verifiabl
 }
 ```
 
-## Pre-requisites
+## Deploy contracts
+
+### Pre-requisites
 
 - NodeJS  > 12.4
 - OpenZeppelin CLI > 2.8.2
 - OpenZeppelin Contracts @ 3.0.0
-
-## Deploy contracts
 
 1. Initialize OpenZeppelin project
 ```
@@ -190,4 +190,12 @@ $ oz send-tx
 ```
 $ npm install
 $ npm test
+```
+
+
+### Using Docker
+
+```
+$ docker build -t vc-contracts . 
+$ docker run vc-contracts
 ```
