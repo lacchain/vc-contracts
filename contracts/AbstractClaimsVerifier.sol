@@ -48,7 +48,7 @@ contract AbstractClaimsVerifier {
             ));
     }
 
-    function _register(address _issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
+    function _registerCredential(address _issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
         return registry.register(_issuer, _subject, _credentialHash, _from, _exp, signature);
     }
 
@@ -56,7 +56,7 @@ contract AbstractClaimsVerifier {
         return registry.registerSignature(_credentialHash, issuer, signature);
     }
 
-    function _valid(uint256 validFrom, uint256 validTo) internal view returns (bool) {
+    function _validPeriod(uint256 validFrom, uint256 validTo) internal view returns (bool) {
         return (validFrom <= block.timestamp) && (block.timestamp < validTo);
     }
 
@@ -69,7 +69,7 @@ contract AbstractClaimsVerifier {
     }
 
     function _verifyIssuer(bytes32 digest, address issuer, uint8 v, bytes32 r, bytes32 s) internal view returns (bool) {
-        return registry.validDiploma(issuer, ecrecover(digest, v, r, s));
+        return registry.verifyIssuer(issuer, ecrecover(digest, v, r, s));
     }
 
     function _exist(bytes32 digest, address issuer) internal view returns (bool){

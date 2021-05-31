@@ -23,8 +23,6 @@ interface ICredentialRegistry {
 
     function revoke(bytes32 credentialHash) external returns (bool);
 
-    function verify(bytes32 credentialHash, address issuer) external view returns (bool);
-
     function exist(bytes32 credentialHash, address issuer) external view returns (bool);
 
     event CredentialRegistered(bytes32 indexed credentialHash, address by, address id, uint iat);

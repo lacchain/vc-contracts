@@ -4,6 +4,7 @@ const web3Abi = require( "web3-eth-abi" );
 const web3Utils = require( "web3-utils" );
 const ethUtil = require( "ethereumjs-util" );
 
+const CredentialRegistry = artifacts.require( "CredentialRegistry" );
 const ClaimsVerifier = artifacts.require( "ClaimsVerifier" );
 
 const VERIFIABLE_CREDENTIAL_TYPEHASH = web3Utils.soliditySha3( "VerifiableCredential(address issuer,address subject,bytes32 data,uint256 validFrom,uint256 validTo)" );
@@ -89,7 +90,7 @@ contract( "DIDRegistry Recoverable", accounts => {
 		const credentialHash = getCredentialHash( vc, issuer, instance.address );
 		const signature = await signCredential( credentialHash, issuer );
 
-		const tx = await instance.register( subject, credentialHash,
+		const tx = await instance.registerCredential( subject, credentialHash,
 			Math.round( moment( vc.issuanceDate ).valueOf() / 1000 ),
 			Math.round( moment( vc.expirationDate ).valueOf() / 1000 ),
 			signature, { from: issuer.address } );
@@ -213,5 +214,34 @@ contract( "DIDRegistry Recoverable", accounts => {
 		], vc.proof[2].proofValue );
 
 		assert.equal( sign2, true );
+	} );
+
+	it( "should revoke the credential", async() => {
+		const instance = await ClaimsVerifier.deployed()
+		const registry = await CredentialRegistry.deployed()
+
+		const credentialHash = getCredentialHash( vc, issuer, instance.address );
+
+		const tx = await registry.revoke( credentialHash );
+
+		assert.equal( tx.receipt.status, true );
+	} );
+
+	it( "should fail verify credential status", async() => {
+		const instance = await ClaimsVerifier.deployed()
+
+		const data = `0x${sha256( JSON.stringify( vc.credentialSubject ) )}`;
+		const rsv = ethUtil.fromRpcSig( vc.proof[0].proofValue );
+		const result = await instance.verifyCredential( [
+			vc.issuer.replace( 'did:lac:main:', '' ),
+			vc.credentialSubject.id.replace( 'did:lac:main:', '' ),
+			data,
+			Math.round( moment( vc.issuanceDate ).valueOf() / 1000 ),
+			Math.round( moment( vc.expirationDate ).valueOf() / 1000 )
+		], rsv.v, rsv.r, rsv.s );
+
+		const isNotRevoked = result[1];
+
+		assert.equal( isNotRevoked, false );
 	} );
 } );

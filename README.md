@@ -3,6 +3,8 @@ In this repository are the smart contracts based on [EIP-712](https://eips.ether
 
 ### Structure
 
+![Structure](./_assets/structure.png)
+
 The main objective is to have a global credential repository that works in a generic way for any type of Verifiable Credential. 
 That is why within the contracts there is the **CredentialRegistry** whose function is to maintain the main registry. However, it is not intended to interact directly with applications. 
 That is why there is a contract that serves as a Facade to be able to register each type of credential, this contract is called **ClaimsVerifier**, and it is in charge of both registering the credential hashes and verifying them by making internal calls to the **CredentialRegistry**.
@@ -43,6 +45,8 @@ struct VerifiableCredential {
 }
 ```
 
+Where ``data`` should be the SHA-256 of **credentialSubject** of a Verifiable Credential (but it can be the hash of any property of the credential).
+
 And the [EIP-712 Domain](https://eips.ethereum.org/EIPS/eip-712#signatures-and-hashing-overview) is:
 
 ```solidity
@@ -55,8 +59,6 @@ Where:
  - version: The sha3 of number 1
  - chainId: The network id (In L-net is 648529)
  - verifyingContract: The address of **ClaimsVerifier** contract
-
-Where ``data`` should be the SHA-256 of **credentialSubject** of a Verifiable Credential.  
 
 As mentioned in the Structure section, the contract to register a credential is **ClaimsVerifier**, and the function for this is as follows:
 

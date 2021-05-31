@@ -44,12 +44,6 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
         return true;
     }
 
-    function verify(bytes32 _credentialHash, address issuer) override external view returns (bool isValid){
-        CredentialMetadata memory credential = credentials[_credentialHash][issuer];
-        require(credential.subject != address(0), "Credential hash doesn't exist");
-        return credential.status;
-    }
-
     function exist(bytes32 _credentialHash, address issuer) override external view returns (bool exist){
         CredentialMetadata memory credential = credentials[_credentialHash][issuer];
         return (credential.subject != address(0));
@@ -57,11 +51,10 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     function revoked(address issuer, bytes32 _credentialHash) external view returns (bool isValid){
         CredentialMetadata memory credential = credentials[_credentialHash][issuer];
-        //require(credential.subject!=address(0),"Credential hash doesn't exist");
         return !credential.status;
     }
 
-    function validDiploma(address issuer, address signer) external pure returns (bool isValid){
+    function verifyIssuer(address issuer, address signer) external pure returns (bool isValid){
         return (issuer == signer);
     }
 

@@ -34,7 +34,7 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
                 hashVerifiableCredential(vc)
             )
         );
-        return (_exist(digest, vc.issuer), _verifyRevoked(digest, vc.issuer), _verifyIssuer(digest, vc.issuer, v, r, s), (_verifySigners(digest, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _valid(vc.validFrom, vc.validTo));
+        return (_exist(digest, vc.issuer), _verifyRevoked(digest, vc.issuer), _verifyIssuer(digest, vc.issuer, v, r, s), (_verifySigners(digest, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
     }
 
     function verifySigner(VerifiableCredential memory vc, bytes calldata _signature) public view returns (bool){
@@ -50,10 +50,10 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
         return hasRole(SIGNER_ROLE, signer) && _isSigner(digest, vc.issuer, _signature);
     }
 
-    function register(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature) public onlyIssuer returns (bool){
+    function registerCredential(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature) public onlyIssuer returns (bool) {
         address signer = _credentialHash.recover(_signature);
         require(msg.sender == signer, "Sender hasn't signed the credential");
-        return _register(msg.sender, _subject, _credentialHash, _from, _exp, _signature);
+        return _registerCredential(msg.sender, _subject, _credentialHash, _from, _exp, _signature);
     }
 
     function registerSignature(bytes32 _credentialHash, address issuer, bytes calldata _signature) public onlySigner returns (bool){
