@@ -19,9 +19,11 @@ interface ICredentialRegistry {
         bool status;
     }
 
-    function register(address issuer, address subject, bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
+    function registerCredential(address issuer, address subject, bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
 
-    function revoke(bytes32 credentialHash) external returns (bool);
+    function revokeCredential(bytes32 credentialHash) external returns (bool);
+
+    function status(address issuer, bytes32 _credentialHash) external view returns (bool);
 
     function exist(bytes32 credentialHash, address issuer) external view returns (bool);
 

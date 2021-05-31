@@ -222,12 +222,12 @@ contract( "DIDRegistry Recoverable", accounts => {
 
 		const credentialHash = getCredentialHash( vc, issuer, instance.address );
 
-		const tx = await registry.revoke( credentialHash );
+		const tx = await registry.revokeCredential( credentialHash );
 
 		assert.equal( tx.receipt.status, true );
 	} );
 
-	it( "should fail verify credential status", async() => {
+	it( "should fail the verification process due credential status", async() => {
 		const instance = await ClaimsVerifier.deployed()
 
 		const data = `0x${sha256( JSON.stringify( vc.credentialSubject ) )}`;
@@ -243,5 +243,16 @@ contract( "DIDRegistry Recoverable", accounts => {
 		const isNotRevoked = result[1];
 
 		assert.equal( isNotRevoked, false );
+	} );
+
+	it( "should verify credential status using the CredentialRegistry", async() => {
+		const instance = await ClaimsVerifier.deployed()
+		const registry = await CredentialRegistry.deployed()
+
+		const credentialHash = getCredentialHash( vc, issuer, instance.address );
+
+		const result = await registry.status( issuer.address, credentialHash );
+
+		assert.equal( result, false );
 	} );
 } );

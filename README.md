@@ -1,5 +1,5 @@
 ## Introduction
-In this repository are the smart contracts based on [EIP-712](https://eips.ethereum.org/EIPS/eip-712) and [EIP-1812](https://eips.ethereum.org/EIPS/eip-1812) for Structured Data Types and Verifiable Claims respectively, to perform the verification process of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) on-chain.
+In this repository are the smart contracts based on [EIP-712](https://eips.ethereum.org/EIPS/eip-712) and [EIP-1812](https://eips.ethereum.org/EIPS/eip-1812) for Structured Data Types and Verifiable Claims respectively, to perform the registration and verification process of [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) on-chain.
 
 ### Structure
 
@@ -118,6 +118,39 @@ Where:
 - **_signature**: Are the signature of the signer in hex format
 
 The result is only a boolean if the signature is correct.
+
+### 4. Revocation
+As shown in the structure diagram, the process of revocation of a credential must be called directly in the **CredentialRegistry** contract, this is because this function validates that only the issuer can execute this operation (since if the facade is used, the ``msg.sender`` would be the address of the **ClaimVerifier**).
+
+```solidity
+function revokeCredential(bytes32 _credentialHash)
+```
+
+Where:
+- **_credentialHash**: It is the generated credential hash
+
+This function will revoke the credential hash associated to the ``msg.sender`` and the credential hash.
+
+#### Verify the credential status (Revocation List)
+
+Taking advantage of the fact that the CredentialRegistry maintains the revocation status of any credential regardless of the type, we have decided to implement a method to verify this information using this same contract, as follows:
+
+```solidity
+function status(address issuer, bytes32 _credentialHash) external view returns (bool)
+```
+
+Where:
+- **issuer**: It is the issuer address
+- **_credentialHash**: It is the generated credential hash
+
+This information could be used to define the ``credentialStatus`` of a Verifiable Credential.
+
+```json
+"credentialStatus": {
+    "id": "<CREDENTIAL_REGISTRY_ADDRESS>"
+    "type": "SmartContract",
+}
+```
 
 ## Pre-requisites
 

@@ -49,7 +49,7 @@ contract AbstractClaimsVerifier {
     }
 
     function _registerCredential(address _issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
-        return registry.register(_issuer, _subject, _credentialHash, _from, _exp, signature);
+        return registry.registerCredential(_issuer, _subject, _credentialHash, _from, _exp, signature);
     }
 
     function _registerSignature(bytes32 _credentialHash, address issuer, bytes calldata signature) internal returns (bool){
@@ -77,7 +77,7 @@ contract AbstractClaimsVerifier {
     }
 
     function _verifyRevoked(bytes32 digest, address issuer) internal view returns (bool){
-        return !registry.revoked(issuer, digest);
+        return registry.status(issuer, digest);
     }
 
 }
