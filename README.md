@@ -63,7 +63,7 @@ Where:
 As mentioned in the Structure section, the contract to register a credential is **ClaimsVerifier**, and the function for this is as follows:
 
 ```solidity
-function register(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature)
+function registerCredential(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature)
 ```
 
 Where:
@@ -147,8 +147,8 @@ This information could be used to define the ``credentialStatus`` of a Verifiabl
 
 ```json
 "credentialStatus": {
-    "id": "<CREDENTIAL_REGISTRY_ADDRESS>"
-    "type": "SmartContract",
+    "id": "<CREDENTIAL_REGISTRY_ADDRESS>",
+    "type": "SmartContract"
 }
 ```
 
