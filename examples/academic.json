@@ -1,0 +1,59 @@
+{
+	"@context": [
+		"https://www.w3.org/2018/credentials/v1",
+		"https://www.lacchain.net/credentials/library/education/4e6c312cd8e6b18116fe3fd2e9b6e5df810afe0a716c1c511ef6c19cb8554578/v1"
+	],
+	"id": "d49ec380-49eb-474f-8128-a572e8b29278",
+	"type": [
+		"VerifiableCredential",
+		"Certificate"
+	],
+	"issuer": "did:ethr:lacchain:0xadf1702b76419f428014d1386af487b2d8145f83",
+	"issuanceDate": "2020-10-21T15:49:00.057Z",
+	"expirationDate": "2025-10-21T15:49:00.057Z",
+	"credentialSubject": {
+		"id": "did:ethr:lacchain:0x48007072061dc756e5a2ecf15cf2c2bcc091de52",
+		"givenName": "George",
+		"familyName": "Walch",
+		"email": "gw@town.org",
+		"holds": {
+			"category": "Diploma",
+			"industry": "Computer Science",
+			"skillset": "Blockchain",
+			"course": "Introducción a LACChain Besu",
+			"description": "Curso introductorio de despliegue de nodos en LACChain Besu para desarrolladores",
+			"url": "https://aula.blockchainacademy.cl/p/introduccion-a-lacchain",
+			"duration": 40,
+			"modality": "virtual",
+			"location": null
+		}
+	},
+	"evidence": true,
+	"credentialStatus": {
+		"id": "0x4185Dab0662ccDa3D3F35779578a4242bb89Db37",
+		"type": "SmartContract"
+	},
+	"proof": [
+		{
+			"id": "did:ethr:lacchain:0xadf1702b76419f428014d1386af487b2d8145f83",
+			"type": "EcdsaSecp256k1Signature2019",
+			"proofPurpose": "assertionMethod",
+			"verificationMethod": "0x7a746D34754C14EB3eb1F214BD0EA23a1A18Be7A",
+			"proofValue": "0x0b8d75810bf30fd221ddd6892e9e50b1c63240aba4767a9af2bfb8d8e5944e7b169f78d99f3174055de5a7fcbb65d1367c900a19302c5409a01d77339001d7181b"
+		},
+		{
+			"id": "did:ethr:lacchain:0xf0c0ee53386b8463ff3e58203d45d982058b7917",
+			"type": "EcdsaSecp256k1Signature2019",
+			"proofPurpose": "assertionMethod",
+			"verificationMethod": "0x7a746D34754C14EB3eb1F214BD0EA23a1A18Be7A",
+			"proofValue": "0xb1d3eb341fef023b28a9e62bb6ba66ca5b473872249bd6724afcbc71a0d08a8e5a1fd2a325d5591e1380e94404921b90d6589b9366e9c2c638b2683e7c230fcd1b"
+		},
+		{
+			"id": "did:ethr:lacchain:0xaa799564d54356cc754bd5d126101602f1d01ced",
+			"type": "EcdsaSecp256k1Signature2019",
+			"proofPurpose": "assertionMethod",
+			"verificationMethod": "0x7a746D34754C14EB3eb1F214BD0EA23a1A18Be7A",
+			"proofValue": "0x4361ba3b2e1a392858e5a6da1a4a948f1f73107849951e4167d9ad89cc0a35bf593d774e9e3ea9cf3ce2b7133c9c8ae1c6d3c2730ff0ec5c20a602cc1b61f21c1b"
+		}
+	]
+}

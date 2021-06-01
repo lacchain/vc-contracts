@@ -1,0 +1,46 @@
+{
+	"@context": [
+		"https://www.w3.org/2018/credentials/v1",
+		"https://www.lacchain.net/credentials/library/health/4e6c312cd8e6b18116fe3fd2e9b6e5df810afe0a716c1c511ef6c19cb8554578/v1"
+	],
+	"id": "1526fba2-f26d-4769-ac69-44b5295f5f98",
+	"type": [
+		"VerifiableCredential",
+		"VaccinationCertificate"
+	],
+	"issuer": "did:ethr:lacchain:0x49e007aA501542e5233f19539aa2ceB18b173D43",
+	"issuanceDate": "2021-05-25T16:40:15.305Z",
+	"expirationDate": "2026-05-25T16:40:15.305Z",
+	"credentialSubject": {
+		"id": "did:ethr:lacchain:0xdfd7ed8e098d68d202b48c58f0132e3cc2fe4484",
+		"givenName": "Marcos",
+		"familyName": "Allende Lopez",
+		"country": "Estados Unidos",
+		"city": "Washington",
+		"state": "DC",
+		"birthDate": "1994-07-11T16:22:00.028Z",
+		"vaccine": {
+			"productName": "SARS-CoV-2",
+			"manufacturer": "Pfizer / BioNTech",
+			"lot": "1230JHLI918",
+			"token": "A0190LKk5617L879",
+			"dose": 1,
+			"vaccinationDate": "2021-01-15T16:22:00.028Z",
+			"vaccinationCenterId": "F50",
+			"vaccinationCenterName": "University of Cambridge"
+		}
+	},
+	"evidence": true,
+	"credentialStatus": {
+		"id": "0xe88357BF682d965a38CE41d00085C05412d25936",
+		"type": "SmartContract"
+	},
+	"proof": [
+		{
+			"id": "did:ethr:lacchain:0x7ddf445e5f6361ea45d55e50d83bd50c42ca3ba5",
+			"type": "EcdsaSecp256k1Signature2019",
+			"proofPurpose": "assertionMethod",
+			"verificationMethod": "0x03bD9f02d88ba6a95199eaf132B4B506606250c2"
+		}
+	]
+}

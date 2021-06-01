@@ -25,14 +25,16 @@ The contracts make use of the [OpenZeppelin Access Control System](https://docs.
 
 The **ISSUER_ROLE** should be assigned to any account that is going to register a credential in the **ClaimsVerifier** contract.
 
-The **SIGNER_ROLE** should be assigned to any account that is going to sign a credential within the **ClaimsVerifier** contract. Note: The issuer does not count as a signer, since by default the signer will send its signature when registering the credential.
+The **SIGNER_ROLE** should be assigned to any account that is going to sign a credential within the **ClaimsVerifier** contract. 
+
+***Note**: The issuer does not count as a signer, since by default the signer will send his signature when registering the credential*.
 
 There is an additional use of the **ISSUER_ROLE**, and that in order to interact with the **CredentialRegistry**, the **ClaimsVerifier** contract address must be registered as an issuer in the **CredentialRegistry**. The latter makes more sense when considering that there will be different types of credentials and therefore Claims Verifiers.
 
 ## Usage
 
 ### 1. Register a credential
-The process of registering a credential consists of storing the hash of the credential, in this way no information is compromised.
+The process to register a new credential consists of store the hash of the credential, in this way no information is compromised.
 To generate the credential hash is used the [EIP-1812 Verifiable Claims](https://eips.ethereum.org/EIPS/eip-1812#claims-data-structure), with the following data structure:
 
 ```solidity
@@ -120,7 +122,7 @@ Where:
 The result is only a boolean if the signature is correct.
 
 ### 3. Revocation
-As shown in the structure diagram, the process of revocation of a credential must be called directly in the **CredentialRegistry** contract, this is because this function validates that only the issuer can execute this operation (since if the facade is used, the ``msg.sender`` would be the address of the **ClaimVerifier**).
+As shown in the structure diagram, the process of revocation of a credential must be called directly in the **CredentialRegistry** contract, that is because this function validates that only the issuer can execute this operation (since if the facade is used, the ``msg.sender`` would be the address of the **ClaimVerifier**).
 
 ```solidity
 function revokeCredential(bytes32 _credentialHash)
@@ -133,7 +135,7 @@ This function will revoke the credential associated to the ``msg.sender`` and th
 
 #### Verify the credential status (Revocation List)
 
-Taking advantage of the fact that the CredentialRegistry maintains the revocation status of any credential regardless of the type, we have decided to implement a method to verify this information using this same contract, as follows:
+Taking advantage of the fact that the **CredentialRegistry** maintains the revocation status of any credential regardless of the type, we have decided to implement a method to verify this information using this same contract, as follows:
 
 ```solidity
 function status(address issuer, bytes32 _credentialHash) external view returns (bool)
@@ -151,6 +153,13 @@ This information could be used to define the ``credentialStatus`` of a Verifiabl
     "type": "SmartContract"
 }
 ```
+
+## Credential Examples
+
+To show some examples of generated Verifiable Credentials are in this same repository.
+
+1. [Academic Certificate](./examples/academic.json). An example of VC for academic diplomas, specifically for the LACChain Academy course.
+2. [Vaccination Credential](./examples/vaccination.json). An example of VC that certifies a vaccinated person.
 
 ## Deploy contracts
 
