@@ -30,13 +30,13 @@ function getCredentialHash( vc, issuer, claimsVerifierContractAddress ) {
 	const validFrom = new Date( vc.issuanceDate ).getTime();
 	const validTo = new Date( vc.expirationDate ).getTime();
 	const subjectAddress = vc.credentialSubject.id.split( ':' ).slice( -1 )[0];
-	const encodeHashStudiesCredential = web3Abi.encodeParameters(
+	const encodeHashCredential = web3Abi.encodeParameters(
 		['bytes32', 'address', 'address', 'bytes32', 'uint256', 'uint256'],
 		[VERIFIABLE_CREDENTIAL_TYPEHASH, issuer.address, subjectAddress, hashDiplomaHex, Math.round( validFrom / 1000 ), Math.round( validTo / 1000 )]
 	);
-	const hashStudiesCredential = web3Utils.soliditySha3( encodeHashStudiesCredential );
+	const hashCredential = web3Utils.soliditySha3( encodeHashCredential );
 
-	const encodedCredentialHash = web3Abi.encodeParameters( ['bytes32', 'bytes32'], [hashEIP712Domain, hashStudiesCredential.toString( 16 )] );
+	const encodedCredentialHash = web3Abi.encodeParameters( ['bytes32', 'bytes32'], [hashEIP712Domain, hashCredential.toString( 16 )] );
 	return web3Utils.soliditySha3( '0x1901'.toString( 16 ) + encodedCredentialHash.substring( 2, 131 ) );
 }
 
@@ -48,7 +48,7 @@ function signCredential( credentialHash, issuer ) {
 	return ethUtil.toRpcSig( rsv.v, rsv.r, rsv.s );
 }
 
-contract( "DIDRegistry Recoverable", accounts => {
+contract( "Verifiable Credentials", accounts => {
 
 	const subject = accounts[1];
 	const issuer = {

@@ -20,7 +20,7 @@ That is why there is a contract that serves as a Facade to be able to register e
 
 The contracts make use of the [OpenZeppelin Access Control System](https://docs.openzeppelin.com/contracts/2.x/access-control), for which 2 roles have been defined:
 
-- **ISSUER_ROLE**: 0x114e74f6ea3íritu19998f78687bfcb11b140da08e9b7d222fa9c1f1ba1f2aa122 
+- **ISSUER_ROLE**: 0x114e74f6ea3bd819998f78687bfcb11b140da08e9b7d222fa9c1f1ba1f2aa122 
 - **SIGNER_ROLE**: 0xe2f4eaae4a9751e85a3e4a7b9587827a877f29914755229b07a7b2da98285f70
 
 The **ISSUER_ROLE** should be assigned to any account that is going to register a credential in the **ClaimsVerifier** contract.
