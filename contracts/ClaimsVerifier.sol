@@ -26,34 +26,19 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function verifyCredential(VerifiableCredential memory vc, uint8 v, bytes32 r, bytes32 s) public view returns (bool, bool, bool, bool, bool) {
-        bytes32 digest = keccak256(
-            abi.encodePacked(
-                "\x19\x01",
-                DOMAIN_SEPARATOR,
-                hashVerifiableCredential(vc)
-            )
-        );
-        return (_exist(digest, vc.issuer), _verifyRevoked(digest, vc.issuer), _verifyIssuer(digest, vc.issuer, v, r, s), (_verifySigners(digest, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
+    function verifyCredential(bytes32 digestVC, uint8 v, bytes32 r, bytes32 s) public view returns (bool, bool, bool, bool, bool) {
+        return (_exist(digestVC, vc.issuer), _verifyRevoked(digestVC, vc.issuer), _verifyIssuer(digestVC, vc.issuer, v, r, s), (_verifySigners(digestVC, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
     }
 
-    function verifySigner(VerifiableCredential memory vc, bytes calldata _signature) public view returns (bool){
-        bytes32 digest = keccak256(
-            abi.encodePacked(
-                "\x19\x01",
-                DOMAIN_SEPARATOR,
-                hashVerifiableCredential(vc)
-            )
-        );
-
+    function verifySigner(bytes32 digest, bytes calldata _signature) public view returns (bool){
         address signer = digest.recover(_signature);
         return hasRole(SIGNER_ROLE, signer) && _isSigner(digest, vc.issuer, _signature);
     }
 
-    function registerCredential(address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature) public onlyIssuer returns (bool) {
+    function registerCredential(bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature) public onlyIssuer returns (bool) {
         address signer = _credentialHash.recover(_signature);
         require(msg.sender == signer, "Sender hasn't signed the credential");
-        return _registerCredential(msg.sender, _subject, _credentialHash, _from, _exp, _signature);
+        return _registerCredential(msg.sender, _credentialHash, _from, _exp, _signature);
     }
 
     function registerSignature(bytes32 _credentialHash, address issuer, bytes calldata _signature) public onlySigner returns (bool){

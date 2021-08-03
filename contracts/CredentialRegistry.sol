@@ -15,16 +15,15 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function registerCredential(address issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) external override onlyIssuer returns (bool) {
+    function registerCredential(address issuer, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) external override onlyIssuer returns (bool) {
         CredentialMetadata storage credential = credentials[_credentialHash][issuer];
-        require(credential.subject == address(0), "Credential already exists");
+        require(credential.issuer == address(0), "Credential already exists");
         credential.issuer = issuer;
-        credential.subject = _subject;
         credential.validFrom = _from;
         credential.validTo = _exp;
         credential.status = true;
         credentials[_credentialHash][issuer] = credential;
-        emit CredentialRegistered(_credentialHash, issuer, _subject, credential.validFrom);
+        emit CredentialRegistered(_credentialHash, issuer, credential.validFrom);
         return true;
     }
 
@@ -35,7 +34,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
     function revokeCredential(bytes32 _credentialHash) external override returns (bool) {
         CredentialMetadata storage credential = credentials[_credentialHash][msg.sender];
 
-        require(credential.subject != address(0), "credential hash doesn't exist");
+        require(credential.issuer != address(0), "credential hash doesn't exist");
         require(credential.status, "Credential is already revoked");
 
         credential.status = false;
@@ -46,7 +45,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     function exist(bytes32 _credentialHash, address issuer) override external view returns (bool exist){
         CredentialMetadata memory credential = credentials[_credentialHash][issuer];
-        return (credential.subject != address(0));
+        return (credential.issuer != address(0));
     }
 
     function status(address issuer, bytes32 _credentialHash) override external view returns (bool){
@@ -60,7 +59,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     function _registerSignature(bytes32 _credentialHash, address issuer, bytes calldata _signature) private onlyIssuer returns (bool){
         CredentialMetadata storage credential = credentials[_credentialHash][issuer];
-        require(credential.subject != address(0), "Credential doesn't exists");
+        require(credential.issuer != address(0), "Credential doesn't exists");
         bytes memory signature = _signature;
         bytes32 r;
         bytes32 s;
@@ -91,7 +90,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     function getSigners(bytes32 _credentialHash, address _issuer) external view returns (uint8 signers){
         CredentialMetadata memory credential = credentials[_credentialHash][_issuer];
-        if (credential.subject != address(0)) {
+        if (credential.issuer != address(0)) {
             return uint8(credential.signatures.length);
         }
         return 0;
@@ -99,7 +98,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     function isSigner(bytes32 _credentialHash, address _issuer, bytes memory _signature) external view returns (bool){
         CredentialMetadata memory credential = credentials[_credentialHash][_issuer];
-        require(credential.subject != address(0), "Credential doesn't exists");
+        require(credential.issuer != address(0), "Credential doesn't exists");
         //bytes memory signature = _signature;
         bytes32 r;
         bytes32 s;

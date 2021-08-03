@@ -48,8 +48,8 @@ contract AbstractClaimsVerifier {
             ));
     }
 
-    function _registerCredential(address _issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
-        return registry.registerCredential(_issuer, _subject, _credentialHash, _from, _exp, signature);
+    function _registerCredential(address _issuer, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
+        return registry.registerCredential(_issuer, _credentialHash, _from, _exp, signature);
     }
 
     function _registerSignature(bytes32 _credentialHash, address issuer, bytes calldata signature) internal returns (bool){

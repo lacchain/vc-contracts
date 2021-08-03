@@ -12,14 +12,13 @@ interface ICredentialRegistry {
 
     struct CredentialMetadata {
         address issuer;
-        address subject;
         uint256 validFrom;
         uint256 validTo;
         Signature[] signatures;
         bool status;
     }
 
-    function registerCredential(address issuer, address subject, bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
+    function registerCredential(address issuer, bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
 
     function revokeCredential(bytes32 credentialHash) external returns (bool);
 
@@ -27,6 +26,6 @@ interface ICredentialRegistry {
 
     function exist(bytes32 credentialHash, address issuer) external view returns (bool);
 
-    event CredentialRegistered(bytes32 indexed credentialHash, address by, address id, uint iat);
+    event CredentialRegistered(bytes32 indexed credentialHash, address by, uint iat);
     event CredentialRevoked(bytes32 indexed credentialHash, address by, uint256 date);
 }
