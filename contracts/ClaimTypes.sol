@@ -3,17 +3,20 @@
 pragma solidity >=0.6.0 <0.7.0;
 pragma experimental ABIEncoderV2;
 
-contract ClaimTypes {
+interface ClaimTypes {
 
-    struct VerifiableCredential {
-        address issuer;
-        bytes32 data;
-        uint256 validFrom;
-        uint256 validTo;
+    struct Signature {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
     }
 
-    bytes32 constant internal VERIFIABLE_CREDENTIAL_TYPEHASH = keccak256(
-        "VerifiableCredential(address issuer,bytes32 data,uint256 validFrom,uint256 validTo)"
-    );
+    struct CredentialMetadata {
+        bytes issuerSignature;
+        uint256 validFrom;
+        uint256 validTo;
+        Signature[] signatures;
+        uint8 status; // 0 unregistered, 1 registered, 2 revoked
+    }
 
 }

@@ -3,8 +3,9 @@
 pragma solidity >=0.6.0 <0.7.0;
 
 import "./CredentialRegistry.sol";
+import "./ClaimTypes.sol";
 
-contract AbstractClaimsVerifier {
+contract AbstractClaimsVerifier is ClaimTypes {
 
     CredentialRegistry registry;
 
@@ -48,36 +49,36 @@ contract AbstractClaimsVerifier {
             ));
     }
 
-    function _registerCredential(address _issuer, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
-        return registry.registerCredential(_issuer, _credentialHash, _from, _exp, signature);
+    function _registerCredential(bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) internal returns (bool){
+        return registry.registerCredential(_credentialHash, _from, _exp, signature);
     }
 
-    function _registerSignature(bytes32 _credentialHash, address issuer, bytes calldata signature) internal returns (bool){
-        return registry.registerSignature(_credentialHash, issuer, signature);
+    function _registerSignature(bytes32 _credentialHash, bytes calldata signature) internal returns (bool){
+        return registry.registerSignature(_credentialHash, signature);
     }
 
     function _validPeriod(uint256 validFrom, uint256 validTo) internal view returns (bool) {
         return (validFrom <= block.timestamp) && (block.timestamp < validTo);
     }
 
-    function _verifySigners(bytes32 _digest, address _issuer) internal view returns (uint8){
-        return registry.getSigners(_digest, _issuer);
+    function _verifySigners(bytes32 _digest) internal view returns (uint8){
+        return registry.getSigners(_digest);
     }
 
-    function _isSigner(bytes32 _digest, address _issuer, bytes memory _signature) internal view returns (bool){
-        return registry.isSigner(_digest, _issuer, _signature);
+    function _isSigner(bytes32 _digest, bytes memory _signature) internal view returns (bool){
+        return registry.isSigner(_digest, _signature);
     }
 
-    function _verifyIssuer(bytes32 digest, address issuer, uint8 v, bytes32 r, bytes32 s) internal view returns (bool) {
-        return registry.verifyIssuer(issuer, ecrecover(digest, v, r, s));
+    function _exist(bytes32 digest) internal view returns (bool){
+        return registry.exist(digest);
     }
 
-    function _exist(bytes32 digest, address issuer) internal view returns (bool){
-        return registry.exist(digest, issuer);
+    function _verifyRevoked(bytes32 digest) internal view returns (bool){
+        return registry.status(digest) == 2;
     }
 
-    function _verifyRevoked(bytes32 digest, address issuer) internal view returns (bool){
-        return registry.status(issuer, digest);
+    function _getCredential(bytes32 credentialHash) internal view returns (CredentialMetadata memory){
+        return registry.getCredential(credentialHash);
     }
 
 }

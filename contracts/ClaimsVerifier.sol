@@ -6,9 +6,8 @@ pragma experimental ABIEncoderV2;
 import "./lib/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./AbstractClaimsVerifier.sol";
-import "./ClaimTypes.sol";
 
-contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
+contract ClaimsVerifier is AbstractClaimsVerifier, AccessControl {
 
     using ECDSA for bytes32;
 
@@ -26,25 +25,27 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function verifyCredential(bytes32 digestVC, uint8 v, bytes32 r, bytes32 s) public view returns (bool, bool, bool, bool, bool) {
-        return (_exist(digestVC, vc.issuer), _verifyRevoked(digestVC, vc.issuer), _verifyIssuer(digestVC, vc.issuer, v, r, s), (_verifySigners(digestVC, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
+    function verifyCredential(bytes32 credentialHash, uint8 v, bytes32 r, bytes32 s) public view returns (bool, bool, bool, bool, bool) {
+        CredentialMetadata memory vc = _getCredential( credentialHash );
+        address issuer = ecrecover(credentialHash, v, r, s);
+        return (_exist(credentialHash), _verifyRevoked(credentialHash), hasRole(ISSUER_ROLE, issuer), (_verifySigners(credentialHash) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
     }
 
     function verifySigner(bytes32 digest, bytes calldata _signature) public view returns (bool){
         address signer = digest.recover(_signature);
-        return hasRole(SIGNER_ROLE, signer) && _isSigner(digest, vc.issuer, _signature);
+        return hasRole(SIGNER_ROLE, signer) && _isSigner(digest, _signature);
     }
 
     function registerCredential(bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata _signature) public onlyIssuer returns (bool) {
         address signer = _credentialHash.recover(_signature);
         require(msg.sender == signer, "Sender hasn't signed the credential");
-        return _registerCredential(msg.sender, _credentialHash, _from, _exp, _signature);
+        return _registerCredential(_credentialHash, _from, _exp, _signature);
     }
 
-    function registerSignature(bytes32 _credentialHash, address issuer, bytes calldata _signature) public onlySigner returns (bool){
+    function registerSignature(bytes32 _credentialHash, bytes calldata _signature) public onlySigner returns (bool){
         address signer = _credentialHash.recover(_signature);
         require(msg.sender == signer, "Sender hasn't signed the credential");
-        return _registerSignature(_credentialHash, issuer, _signature);
+        return _registerSignature(_credentialHash, _signature);
     }
 
     modifier onlyAdmin(){

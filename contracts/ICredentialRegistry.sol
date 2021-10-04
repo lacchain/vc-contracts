@@ -1,31 +1,22 @@
 //SPDX-License-Identifier: UNLICENSED
 
 pragma solidity >=0.6.0 <0.7.0;
+pragma experimental ABIEncoderV2;
 
-interface ICredentialRegistry {
+import "./ClaimTypes.sol";
 
-    struct Signature {
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
-    }
+interface ICredentialRegistry is ClaimTypes {
 
-    struct CredentialMetadata {
-        address issuer;
-        uint256 validFrom;
-        uint256 validTo;
-        Signature[] signatures;
-        bool status;
-    }
-
-    function registerCredential(address issuer, bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
+    function registerCredential(bytes32 credentialHash, uint256 from, uint256 exp, bytes calldata signature) external returns (bool);
 
     function revokeCredential(bytes32 credentialHash) external returns (bool);
 
-    function status(address issuer, bytes32 _credentialHash) external view returns (bool);
+    function getCredential(bytes32 credentialHash) external view returns (CredentialMetadata memory);
 
-    function exist(bytes32 credentialHash, address issuer) external view returns (bool);
+    function status(bytes32 _credentialHash) external view returns (uint8);
 
-    event CredentialRegistered(bytes32 indexed credentialHash, address by, uint iat);
-    event CredentialRevoked(bytes32 indexed credentialHash, address by, uint256 date);
+    function exist(bytes32 credentialHash) external view returns (bool);
+
+    event CredentialRegistered(bytes32 indexed credentialHash, uint iat);
+    event CredentialRevoked(bytes32 indexed credentialHash, uint256 date);
 }
