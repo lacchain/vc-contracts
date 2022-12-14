@@ -6,7 +6,7 @@ import "./CredentialRegistry.sol";
 
 contract AbstractClaimsVerifier {
 
-    CredentialRegistry registry;
+    CredentialRegistry public registry;
 
     struct EIP712Domain {
         string name;

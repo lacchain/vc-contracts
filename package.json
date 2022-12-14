@@ -13,9 +13,17 @@
     "ethereumjs-util": "^7.0.10",
     "ganache-cli": "^6.5.0",
     "moment": "^2.29.1",
-    "truffle": "^5.1.67",
     "web3-eth-abi": "^1.3.6",
     "web3-utils": "^1.3.6",
     "@openzeppelin/contracts": "3.0.0"
+  },
+  "devDependencies": {
+    "@lacchain/gas-model-provider": "^1.0.1",
+    "hardhat": "2.9.7",
+    "@nomiclabs/hardhat-ethers": "2.0.6",
+    "@nomiclabs/hardhat-waffle": "2.0.3",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "5.6.8",
+    "chai": "4.3.6"
   }
 }

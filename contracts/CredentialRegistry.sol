@@ -3,7 +3,7 @@
 pragma solidity >=0.6.0 <0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "./oz/AccessControl.sol";
 import "./ICredentialRegistry.sol";
 
 contract CredentialRegistry is ICredentialRegistry, AccessControl {
@@ -12,7 +12,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
     mapping(bytes32 => mapping(address => CredentialMetadata)) public credentials;
 
     constructor() public {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function registerCredential(address issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) external override onlyIssuer returns (bool) {
@@ -33,14 +33,14 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
     }
 
     function revokeCredential(bytes32 _credentialHash) external override returns (bool) {
-        CredentialMetadata storage credential = credentials[_credentialHash][msg.sender];
+        CredentialMetadata storage credential = credentials[_credentialHash][_msgSender()];
 
         require(credential.subject != address(0), "credential hash doesn't exist");
         require(credential.status, "Credential is already revoked");
 
         credential.status = false;
-        credentials[_credentialHash][msg.sender] = credential;
-        emit CredentialRevoked(_credentialHash, msg.sender, block.timestamp);
+        credentials[_credentialHash][_msgSender()] = credential;
+        emit CredentialRevoked(_credentialHash, _msgSender(), block.timestamp);
         return true;
     }
 
